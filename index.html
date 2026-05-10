@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Food Grade">
-<title>Food Grade v6.2</title>
+<title>Food Grade v6.4</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -131,6 +131,24 @@
   .micros-title { font-size: 8px; color: var(--muted); letter-spacing: 2px; margin-bottom: 6px; }
   .micros-list { display: flex; flex-wrap: wrap; gap: 4px; }
   .micro-tag { font-size: 9px; background: var(--dim); color: #aaa; padding: 3px 7px; border-radius: 3px; }
+
+  /* ACTION BUTTONS — proper classes, no more inline style hacks */
+  .food-actions {
+    display: flex; gap: 8px; margin-top: 14px; align-items: stretch;
+    padding-top: 10px; border-top: 1px dashed var(--border);
+  }
+  .btn-action {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 8px; border-radius: 6px; border-width: 1px; border-style: solid;
+    font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 1px;
+    cursor: pointer; box-sizing: border-box; min-height: 40px;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  }
+  .btn-shop { border-color: #888; color: #ddd; background: transparent; }
+  .btn-shop.active { background: rgba(61,220,132,0.12); border-color: #3ddc84; color: #3ddc84; }
+  .btn-plate { background: rgba(180,126,255,0.08); border-color: #b47eff; color: #b47eff; }
+  .btn-plate.active { background: rgba(180,126,255,0.2); border-color: #b47eff; color: #b47eff; }
+  .btn-detail { background: none; border-color: #444; color: #888; flex: none; font-size: 10px; padding: 8px 12px; box-sizing: border-box; }
 
   #empty { text-align: center; padding: 60px 20px; color: var(--dim); font-size: 11px; letter-spacing: 3px; display: none; }
 
@@ -627,7 +645,7 @@
     <div><span style="color:var(--muted)">MIC</span> = MICRONUTRIENT DENSITY PER CALORIE</div>
     <div><span style="color:var(--muted)">KCAL</span> = PER 100G RAW UNLESS NOTED</div>
     <div><span style="color:var(--muted)">💰</span> = APPROXIMATE SWEDEN PRICE REFERENCE</div>
-    <div style="margin-top:14px;color:#2a2a3a;letter-spacing:2px">FOOD GRADE V6.2 · © 2026 KHALL00D1</div>
+    <div style="margin-top:14px;color:#2a2a3a;letter-spacing:2px">FOOD GRADE V6.4 · © 2026 KHALL00D1</div>
   </div>
 </div>
 
@@ -972,28 +990,33 @@ searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { search
 
 // ── FOOD LIST delegation ─────────────────────────────────────────────────────
 addTapListener(document.getElementById("food-list"), (e) => {
-  const addPlateBtn = e.target.closest(".add-plate-btn");
-  if (addPlateBtn) {
-    const food = foods.find(f => f.name === addPlateBtn.dataset.food);
-    if (food) addToPlate(food, 'M'); // Fix 1: no longer opens panel
-    return;
-  }
-  const cartBtn = e.target.closest(".cart-btn");
-  if (cartBtn) {
-    toggleCart(cartBtn.dataset.food, cartBtn.dataset.cat, e);
-    return;
-  }
-  const detailBtn = e.target.closest(".detail-btn");
-  if (detailBtn) {
-    const foodName = detailBtn.dataset.food;
-    const panelId = "detail-" + foodName.replace(/[^a-z0-9]/gi,'_');
-    const panel = document.getElementById(panelId);
-    if (panel) {
-      panel.classList.toggle("open");
-      detailBtn.classList.toggle("open");
-      detailBtn.textContent = panel.classList.contains("open") ? "− LESS DETAIL" : "+ MORE DETAIL";
+  const btn = e.target.closest("[data-action]");
+  if (btn) {
+    const action = btn.dataset.action;
+    const foodName = btn.dataset.food;
+    const food = foods.find(f => f.name === foodName);
+
+    if (action === 'shop') {
+      toggleCart(foodName, btn.dataset.cat, e);
+      return;
     }
-    return;
+    if (action === 'plate') {
+      if (food) {
+        const existing = plateItems.findIndex(i => i.food.name === foodName);
+        if (existing === -1) addToPlate(food, 'M');
+        else { plateItems.splice(existing, 1); renderPlate(); savePlate(); render(); }
+      }
+      return;
+    }
+    if (action === 'detail') {
+      const panelId = "detail-" + foodName.replace(/[^a-z0-9]/gi,'_');
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        panel.classList.toggle("open");
+        btn.textContent = panel.classList.contains("open") ? "− LESS" : "+ MORE";
+      }
+      return;
+    }
   }
   const foodRow = e.target.closest(".food-row");
   if (foodRow) {
@@ -1011,7 +1034,13 @@ addTapListener(document.getElementById("list-items"), (e) => {
     renderPanel();
     return;
   }
-  // Entire row is tappable to toggle check
+  const shopToPlate = e.target.closest(".shop-to-plate-btn");
+  if (shopToPlate) {
+    const food = foods.find(f => f.name === shopToPlate.dataset.name);
+    if (food) { addToPlate(food, 'M'); switchPanel('plate'); }
+    return;
+  }
+  // Entire row tappable to toggle check
   const row = e.target.closest(".list-item");
   if (row && row.dataset.name) {
     const name = row.dataset.name;
@@ -1099,11 +1128,12 @@ function renderPanel() {
           <div class="list-check ${isChecked ? 'checked' : ''}" data-name="${item.name}">
             ${isChecked ? '<span style="font-size:10px;color:#000">✓</span>' : ''}
           </div>
-          <div>
-            <div class="list-item-name ${isChecked ? 'checked' : ''}">${item.name}</div>
-          </div>
+          <div class="list-item-name ${isChecked ? 'checked' : ''}">${item.name}</div>
         </div>
-        <button class="list-remove" data-name="${item.name}" data-cat="${item.category}">×</button>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="shop-to-plate-btn" data-name="${item.name}" title="Add to plate" style="background:none;border:1px solid #b47eff;color:#b47eff;font-size:9px;padding:3px 8px;border-radius:3px;cursor:pointer;font-family:'Bebas Neue',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;letter-spacing:1px;">🍽</button>
+          <button class="list-remove" data-name="${item.name}" data-cat="${item.category}">×</button>
+        </div>
       `;
       container.appendChild(div);
     });
@@ -1143,6 +1173,7 @@ function render() {
     const s = score(food);
     const isOpen = expandedName === food.name;
     const inCart = shoppingList.some(i => i.name === food.name);
+    const onPlate = plateItems.some(i => i.food.name === food.name);
     const isChecked = checkedItems.has(food.name);
     const changed = tierChanged(food);
     const maintainTier = food.tier;
@@ -1154,7 +1185,7 @@ function render() {
     item.dataset.foodName = food.name;
     item.dataset.foodCat = food.category;
     item.style.borderLeftColor = isOpen ? c : "transparent";
-    item.style.background = isChecked ? "rgba(255,255,255,0.02)" : (isOpen ? tierBg[effectiveTier] : "transparent");
+    item.style.background = isOpen ? tierBg[effectiveTier] : "transparent";
 
     const modeTagHtml = changed
       ? `<span class="mode-tag ${tierWentUp ? 'mode-tag-bulk' : 'mode-tag-cut'}">${tierWentUp ? '▲' : '▼'} ${activeMode.toUpperCase()}</span>`
@@ -1163,7 +1194,7 @@ function render() {
     item.innerHTML = `
       <div class="food-row">
         <div class="name-col">
-          <div class="food-name" style="${isChecked ? 'color:var(--muted);text-decoration:line-through' : ''}">${food.name}${modeTagHtml}</div>
+          <div class="food-name">${food.name}${modeTagHtml}</div>
           <div class="food-meta">
             <span class="cat-tag">${food.category.toUpperCase()}</span>
             <span style="font-size:8px;color:${c};letter-spacing:1px">${tierLabels[effectiveTier]}</span>
@@ -1194,12 +1225,10 @@ function render() {
             ${tierWentUp ? '▲' : '▼'} TIER CHANGES ON ${activeMode.toUpperCase()} — ${tierWentUp ? 'more useful for your goal' : 'less useful for your goal'}
           </div>` : ''}
           ${food.micros.length > 0 ? `<div class="micros-title">KEY MICRONUTRIENTS</div><div class="micros-list">${food.micros.map(m => `<span class="micro-tag">${m}</span>`).join('')}</div>` : ''}
-          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
-            <button class="cart-btn ${inCart ? 'in-list' : ''}" data-food="${food.name}" data-cat="${food.category}" style="display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid ${inCart ? '#3ddc84' : 'rgba(255,255,255,0.2)'};color:${inCart ? '#3ddc84' : 'var(--muted)'};font-size:9px;letter-spacing:1.5px;padding:5px 10px;border-radius:3px;cursor:pointer;font-family:'Bebas Neue',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;white-space:nowrap;">
-              🛒 ${inCart ? 'IN SHOP LIST' : 'ADD TO SHOP'}
-            </button>
-            <button class="add-plate-btn" data-food="${food.name}" style="display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid rgba(180,126,255,0.5);color:#b47eff;font-size:9px;letter-spacing:1.5px;padding:5px 10px;border-radius:3px;cursor:pointer;font-family:'Bebas Neue',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;white-space:nowrap;">🍽 ADD TO PLATE</button>
-            <button class="detail-btn" data-food="${food.name}">+ MORE DETAIL</button>
+          <div class="food-actions">
+            <button class="btn-action btn-shop ${inCart ? 'active' : ''}" data-action="shop" data-food="${food.name}" data-cat="${food.category}">🛒 ${inCart ? 'IN SHOP LIST' : 'ADD TO SHOP'}</button>
+            <button class="btn-action btn-plate ${onPlate ? 'active' : ''}" data-action="plate" data-food="${food.name}">🍽 ${onPlate ? 'ON PLATE' : 'ADD TO PLATE'}</button>
+            <button class="btn-action btn-detail" data-action="detail" data-food="${food.name}">+ MORE</button>
           </div>
           <div class="detail-panel" id="detail-${food.name.replace(/[^a-z0-9]/gi,'_')}">
             <div style="font-size:8px;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px">FULL MACROS PER 100G</div>
@@ -1234,7 +1263,8 @@ function plateGrams(portion) { return { S:80, M:150, L:250 }[portion]; }
 function calcPlate() {
   if (plateItems.length === 0) return null;
   let totalCalLow = 0, totalCalHigh = 0;
-  let weightedSat = 0, weightedPro = 0, weightedMic = 0, totalWeight = 0;
+  let weightedSat = 0, weightedPro = 0, totalWeight = 0;
+  let micSum = 0; // MIC equally weighted — calories don't determine micronutrient value
 
   plateItems.forEach(({ food, portion }) => {
     const g = plateGrams(portion);
@@ -1243,20 +1273,22 @@ function calcPlate() {
     const calHigh = (food.cal * g * 1.15) / 100;
     totalCalLow += calLow;
     totalCalHigh += calHigh;
-    // Weight each food's SAT/PRO/MIC by its calorie contribution
-    // Foods with near-zero calories (cucumber, sparkling water) get minimum weight of 20
+
+    // SAT and PRO — calorie weighted (larger portions = more filling/protein)
     const w = Math.max(calContrib, 20);
     weightedSat += food.sat * w;
     weightedPro += food.pro * w;
-    weightedMic += food.mic * w;
     totalWeight += w;
+
+    // MIC — equal weight per food regardless of portion/calories
+    // A small amount of kale should move the needle same as a large amount of rice
+    micSum += food.mic;
   });
 
   const sat = Math.round((weightedSat / (totalWeight * 5)) * 100);
   const pro = Math.round((weightedPro / (totalWeight * 5)) * 100);
-  const mic = Math.round((weightedMic / (totalWeight * 5)) * 100);
+  const mic = Math.round((micSum / (plateItems.length * 5)) * 100);
 
-  // Meal score — same mode-aware weights as individual food score
   const w = modeWeights[activeMode];
   const mealScore = Math.round((sat/100)*w.sat*100 + (pro/100)*w.pro*100 + (mic/100)*w.mic*100);
 
@@ -1376,6 +1408,7 @@ function addToPlate(food, portion) {
   else plateItems[existing].portion = portion || plateItems[existing].portion;
   renderPlate();
   savePlate();
+  render(); // update ON PLATE button state
 }
 
 function savePlate() {
