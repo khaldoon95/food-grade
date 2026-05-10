@@ -1,13 +1,36 @@
 # Food Grade — Changelog
 
+
+## v6.4
+- Button architecture rebuilt from scratch — removed legacy .cart-btn class conflict 
+  that was overriding all styling with border:none and opacity:0.3
+- Buttons now use data-action attributes instead of class-based delegation
+- .btn-shop and .btn-plate are fully independent CSS classes with no inheritance conflicts
+- box-sizing: border-box and min-height: 40px on all action buttons — equal size guaranteed
+- align-items: stretch on button row — no more vertical misalignment
+- Shop → Plate workflow: 🍽 button in shopping list panel adds food directly to plate
+  and switches panel to BUILD A PLATE tab
+- ADD TO SHOP shows #888 border and #ddd text — visible on dark background
+- ADD TO SHOP active state: green border + green text + green tint background
+- ADD TO PLATE always purple border, deeper fill when ON PLATE
+
+## v6.3
+- MIC scoring fixed — now equally weighted per food regardless of portion/calories
+  (a small amount of kale contributes same MIC weight as large portion of rice)
+- SAT and PRO remain calorie-weighted (larger portions genuinely matter for fullness/protein)
+- Button padding reduced — no more banner-sized buttons
+- Strikethrough removed from main food list (kept only inside shopping panel)
+- isChecked background removed from food rows
+
 ## v6.2
 - Removed legend from header (kept in welcome screen)
-- ADD TO SHOP button now has visible border and toggles state immediately on tap
-- ADD TO SHOP button no longer stretches full width — hugs text tightly
-- Shopping list rows are now fully tappable to toggle checkbox (not just the small box)
-- Calorie flags now fire on all modes (CUT/MAINTAIN/BULK) with appropriate thresholds
-- Welcome screen slide 4 updated — shopping list instruction corrected, Build a Plate explained, meal score logic explained
-- Returning users will see updated welcome slides automatically
+- ADD TO SHOP button visible border and state toggle on tap
+- Shopping list rows fully tappable to toggle checkbox — not just the small box
+- Calorie flags fire on all modes (CUT/MAINTAIN/BULK) with mode-appropriate thresholds
+  CUT: flags above 600/900 kcal · MAINTAIN: 900/1300 · BULK: 1400/2000
+- Welcome slide 4 updated — shopping list instruction corrected, Build a Plate explained,
+  meal score logic explained
+- Returning users see updated welcome slides automatically (new localStorage key)
 
 ## v6.1
 - Build a Plate feature — add foods with S/M/L portions, get calorie-weighted meal score
@@ -20,6 +43,7 @@
 - Panel title updates correctly when switching between SHOP and BUILD A PLATE tabs
 - CLEAR PLATE button fixed
 - FAB always visible showing both SHOP and PLATE badge counts independently
+
 
 ## v5.2
 - Build a Plate panel tab added alongside SHOP
