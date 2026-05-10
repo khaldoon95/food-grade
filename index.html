@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Food Grade">
-<title>Food Grade v5.1</title>
+<title>Food Grade v6.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -85,7 +85,7 @@
 
   /* COL HEADERS */
   #col-headers {
-    display: grid; grid-template-columns: 1fr 40px 88px 28px 28px;
+    display: grid; grid-template-columns: 1fr 40px 88px 28px;
     padding: 7px 18px 5px; font-size: 8px; letter-spacing: 2px; color: var(--muted);
     border-bottom: 1px solid var(--border);
   }
@@ -93,7 +93,7 @@
   /* FOOD ROWS */
   .food-item { border-bottom: 1px solid var(--border); border-left: 2px solid transparent; }
   .food-row {
-    display: grid; grid-template-columns: 1fr 40px 88px 28px 28px;
+    display: grid; grid-template-columns: 1fr 40px 88px 28px;
     padding: 10px 18px; cursor: pointer; align-items: center; transition: background 0.1s;
   }
   .food-row:active { background: rgba(255,255,255,0.02); }
@@ -135,20 +135,7 @@
   #empty { text-align: center; padding: 60px 20px; color: var(--dim); font-size: 11px; letter-spacing: 3px; display: none; }
 
   /* SHOPPING LIST FAB */
-  #cart-fab {
-    position: fixed; bottom: 20px; right: 18px; z-index: 100;
-    background: var(--green); color: #000; border: none;
-    border-radius: 28px; padding: 12px 20px;
-    font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px;
-    cursor: pointer; display: none; align-items: center; gap: 8px;
-    box-shadow: 0 4px 24px rgba(61,220,132,0.3);
-  }
-  #cart-fab.visible { display: flex; }
-  #cart-count {
-    background: #000; color: var(--green); border-radius: 50%;
-    width: 20px; height: 20px; font-size: 11px;
-    display: flex; align-items: center; justify-content: center;
-  }
+
 
   /* SHOPPING LIST PANEL */
   #list-panel {
@@ -217,7 +204,105 @@
   .mode-tag-bulk { background: rgba(61,220,132,0.15); color: #3ddc84; }
 
 
-  /* DETAIL PANEL */
+  /* PANEL TABS */
+  .panel-tabs {
+    display: flex; border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .panel-tab {
+    flex: 1; padding: 10px; text-align: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 13px;
+    letter-spacing: 1.5px; color: var(--muted); cursor: pointer;
+    border-bottom: 2px solid transparent; transition: all 0.15s;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  }
+  .panel-tab.active { color: #fff; border-bottom-color: #fff; }
+
+  /* PLATE BUILDER */
+  #plate-content { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+  #plate-content.active { display: flex; }
+  #shop-content { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  #shop-content.hidden { display: none; }
+
+  .plate-summary {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .plate-bars { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .plate-bar-row { display: flex; align-items: center; gap: 8px; }
+  .plate-bar-label { font-size: 9px; letter-spacing: 1.5px; width: 28px; flex-shrink: 0; }
+  .plate-bar-track { flex: 1; height: 6px; background: var(--dim); border-radius: 3px; overflow: hidden; }
+  .plate-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+  .plate-bar-pct { font-size: 9px; color: var(--muted); width: 30px; text-align: right; flex-shrink: 0; }
+  .plate-cal { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; }
+  .plate-flags { display: flex; flex-direction: column; gap: 4px; }
+  .plate-flag { font-size: 11px; padding: 4px 8px; border-radius: 4px; }
+  .plate-flag-good { color: #3ddc84; background: rgba(61,220,132,0.08); }
+  .plate-flag-warn { color: #f5c842; background: rgba(245,200,66,0.08); }
+  .plate-flag-info { color: #5c9eff; background: rgba(92,158,255,0.08); }
+
+  .plate-items { overflow-y: auto; flex: 1; padding: 8px 0; -webkit-overflow-scrolling: touch; }
+  .plate-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 18px; border-bottom: 1px solid var(--border);
+  }
+  .plate-item-left { display: flex; flex-direction: column; gap: 2px; }
+  .plate-item-name { font-size: 13px; color: var(--text); font-weight: 600; }
+  .plate-item-sub { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+  .plate-item-right { display: flex; align-items: center; gap: 6px; }
+  .portion-btn {
+    background: var(--dim); border: none; color: var(--muted);
+    font-size: 9px; padding: 3px 7px; border-radius: 3px;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; cursor: pointer;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+    transition: all 0.15s;
+  }
+  .portion-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+  .plate-remove { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 2px 6px; touch-action: manipulation; }
+  .plate-empty { text-align: center; padding: 40px 20px; color: var(--dim); font-size: 12px; letter-spacing: 1px; line-height: 2; }
+
+  .plate-search {
+    padding: 8px 18px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .plate-search input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); padding: 7px 12px; border-radius: 4px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+  }
+  .plate-search input:focus { outline: none; border-color: var(--dim); }
+  .plate-search-results {
+    position: absolute; left: 18px; right: 18px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; z-index: 300; max-height: 200px; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .plate-search-item {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    cursor: pointer; font-size: 13px;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  }
+  .plate-search-item:active { background: rgba(255,255,255,0.05); }
+  .plate-search-item-sub { font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
+
+  /* FAB updated */
+  #cart-fab {
+    position: fixed; bottom: 20px; right: 18px; z-index: 100;
+    background: var(--green); color: #000; border: none;
+    border-radius: 28px; padding: 12px 18px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 24px rgba(61,220,132,0.3);
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  }
+  .fab-badge {
+    background: #000; color: var(--green); border-radius: 50%;
+    width: 18px; height: 18px; font-size: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif; font-weight: 700;
+  }
+  .fab-badge.hidden { display: none; }
+
+
   .detail-btn {
     background: none; border: 1px solid var(--border); color: var(--muted);
     font-size: 9px; letter-spacing: 1.5px; padding: 4px 10px;
@@ -453,14 +538,18 @@
           <div class="welcome-tier-dot" style="background:#3ddc84;margin-top:2px"></div>
           <div class="welcome-tier-desc">Tap <strong style="color:#fff">+ MORE DETAIL</strong> on any food to see full macros and why it ranked where it did.</div>
         </div>
-        <div class="welcome-tier-row" style="margin-bottom:20px">
+        <div class="welcome-tier-row" style="margin-bottom:10px">
           <div class="welcome-tier-dot" style="background:#3ddc84;margin-top:2px"></div>
-          <div class="welcome-tier-desc">The shopping list <strong style="color:#fff">saves between sessions</strong> — tap 🛒 on any food to add it.</div>
+          <div class="welcome-tier-desc">The <strong style="color:#fff">Shopping List</strong> saves between sessions — tap ADD TO SHOP inside any food card.</div>
+        </div>
+        <div class="welcome-tier-row" style="margin-bottom:16px">
+          <div class="welcome-tier-dot" style="background:#b47eff;margin-top:2px"></div>
+          <div class="welcome-tier-desc"><strong style="color:#fff">Build a Plate</strong> — add foods, pick portions (S/M/L), and get a <strong style="color:#fff">Meal Score</strong> weighted by calories. Larger portions carry more weight. Flags tell you what's missing or overdone.</div>
         </div>
         <div class="welcome-disclaimer">
           ⚠️ This is directional guidance, not medical advice. Individual needs vary. Consult a professional for specific health conditions.
         </div>
-        <div style="font-size:9px;color:var(--dim);letter-spacing:1.5px;text-align:center">FOOD GRADE V5.1 · BY KHALL00D1</div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1.5px;text-align:center">FOOD GRADE V6.2 · BY KHALL00D1</div>
       </div>
 
     </div>
@@ -489,15 +578,7 @@
       <button id="info-btn" title="How it works">?</button>
     </div>
   </div>
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#3ddc84"></div>SAT</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#5c9eff"></div>PRO</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#b47eff"></div>MIC</div>
-    <div class="legend-item" style="margin-left:6px"><div class="legend-dot" style="background:#3ddc84;opacity:0.4"></div>INCREDIBLE</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#f5c842;opacity:0.4"></div>STRATEGIC</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ff7043;opacity:0.4"></div>MODERATION</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ef5350;opacity:0.4"></div>AVOID</div>
-  </div>
+
 </div>
 
 <div id="mode-bar">
@@ -533,7 +614,6 @@
   <span style="text-align:right">SCORE</span>
   <span style="padding-left:6px">SAT · PRO · MIC</span>
   <span></span>
-  <span style="text-align:center; font-size:10px">🛒</span>
 </div>
 
 <div id="food-list" onclick=""></div>
@@ -547,30 +627,75 @@
     <div><span style="color:var(--muted)">MIC</span> = MICRONUTRIENT DENSITY PER CALORIE</div>
     <div><span style="color:var(--muted)">KCAL</span> = PER 100G RAW UNLESS NOTED</div>
     <div><span style="color:var(--muted)">💰</span> = APPROXIMATE SWEDEN PRICE REFERENCE</div>
-    <div style="margin-top:14px;color:#2a2a3a;letter-spacing:2px">FOOD GRADE V5.1 · © 2026 KHALL00D1</div>
+    <div style="margin-top:14px;color:#2a2a3a;letter-spacing:2px">FOOD GRADE V6.2 · © 2026 KHALL00D1</div>
   </div>
 </div>
 
-<!-- SHOPPING LIST FAB -->
+<!-- FAB -->
 <button id="cart-fab">
-  🛒 SHOPPING LIST <span id="cart-count">0</span>
+  🛒 SHOP <span class="fab-badge hidden" id="cart-count">0</span>
+  &nbsp;·&nbsp;
+  🍽 PLATE <span class="fab-badge hidden" id="plate-count">0</span>
 </button>
 
 <!-- OVERLAY -->
 <div id="overlay"></div>
 
-<!-- SHOPPING LIST PANEL -->
+<!-- PANEL -->
 <div id="list-panel">
   <div class="panel-header">
-    <div class="panel-title">🛒 SHOPPING LIST</div>
     <div class="panel-actions">
-      <button class="clear-btn">CLEAR ALL</button>
+      <button class="clear-btn" id="clear-btn-el">CLEAR</button>
       <button class="panel-close">✕</button>
     </div>
+    <div class="panel-title" id="panel-title">🛒 SHOP</div>
   </div>
-  <div id="list-items" onclick=""></div>
-  <div class="panel-footer">
-    <div class="item-count-label" id="item-count-label"></div>
+
+  <!-- TABS -->
+  <div class="panel-tabs">
+    <div class="panel-tab active" data-panel="shop">🛒 SHOP</div>
+    <div class="panel-tab" data-panel="plate">🍽 BUILD A PLATE</div>
+  </div>
+
+  <!-- SHOP CONTENT -->
+  <div id="shop-content">
+    <div id="list-items" onclick=""></div>
+    <div class="panel-footer">
+      <div class="item-count-label" id="item-count-label"></div>
+    </div>
+  </div>
+
+  <!-- PLATE CONTENT -->
+  <div id="plate-content">
+    <div class="plate-search" style="position:relative">
+      <input type="text" id="plate-search-input" placeholder="Add food to plate...">
+      <div class="plate-search-results" id="plate-search-results" style="display:none"></div>
+    </div>
+    <div class="plate-summary" id="plate-summary" style="display:none">
+      <div class="plate-bars">
+        <div class="plate-bar-row">
+          <span class="plate-bar-label" style="color:#3ddc84">SAT</span>
+          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-sat-bar" style="width:0%;background:#3ddc84"></div></div>
+          <span class="plate-bar-pct" id="plate-sat-pct">0%</span>
+        </div>
+        <div class="plate-bar-row">
+          <span class="plate-bar-label" style="color:#5c9eff">PRO</span>
+          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-pro-bar" style="width:0%;background:#5c9eff"></div></div>
+          <span class="plate-bar-pct" id="plate-pro-pct">0%</span>
+        </div>
+        <div class="plate-bar-row">
+          <span class="plate-bar-label" style="color:#b47eff">MIC</span>
+          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-mic-bar" style="width:0%;background:#b47eff"></div></div>
+          <span class="plate-bar-pct" id="plate-mic-pct">0%</span>
+        </div>
+      </div>
+      <div class="plate-cal" id="plate-cal"></div>
+      <div class="plate-flags" id="plate-flags"></div>
+    </div>
+    <div class="plate-items" id="plate-items" onclick=""></div>
+    <div class="panel-footer">
+      <div class="item-count-label" id="plate-count-label"></div>
+    </div>
   </div>
 </div>
 
@@ -847,6 +972,17 @@ searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { search
 
 // ── FOOD LIST delegation ─────────────────────────────────────────────────────
 addTapListener(document.getElementById("food-list"), (e) => {
+  const addPlateBtn = e.target.closest(".add-plate-btn");
+  if (addPlateBtn) {
+    const food = foods.find(f => f.name === addPlateBtn.dataset.food);
+    if (food) addToPlate(food, 'M'); // Fix 1: no longer opens panel
+    return;
+  }
+  const cartBtn = e.target.closest(".cart-btn");
+  if (cartBtn) {
+    toggleCart(cartBtn.dataset.food, cartBtn.dataset.cat, e);
+    return;
+  }
   const detailBtn = e.target.closest(".detail-btn");
   if (detailBtn) {
     const foodName = detailBtn.dataset.food;
@@ -859,12 +995,6 @@ addTapListener(document.getElementById("food-list"), (e) => {
     }
     return;
   }
-  const cartBtn = e.target.closest(".cart-btn");
-  if (cartBtn) {
-    const item = cartBtn.closest(".food-item");
-    toggleCart(item.dataset.foodName, item.dataset.foodCat, e);
-    return;
-  }
   const foodRow = e.target.closest(".food-row");
   if (foodRow) {
     const item = foodRow.closest(".food-item");
@@ -875,25 +1005,26 @@ addTapListener(document.getElementById("food-list"), (e) => {
 
 // ── PANEL delegation ─────────────────────────────────────────────────────────
 addTapListener(document.getElementById("list-items"), (e) => {
-  const check = e.target.closest(".list-check");
-  if (check) {
-    const name = check.dataset.name;
-    if (checkedItems.has(name)) checkedItems.delete(name);
-    else checkedItems.add(name);
-    renderPanel(); render(); return;
-  }
   const remove = e.target.closest(".list-remove");
   if (remove) {
     toggleCart(remove.dataset.name, remove.dataset.cat, e);
     renderPanel();
+    return;
+  }
+  // Entire row is tappable to toggle check
+  const row = e.target.closest(".list-item");
+  if (row && row.dataset.name) {
+    const name = row.dataset.name;
+    if (checkedItems.has(name)) checkedItems.delete(name);
+    else checkedItems.add(name);
+    renderPanel(); render();
   }
 });
 
-// FAB, overlay, clear, close
+// FAB, overlay, close — clear handled separately below
 addTapListener(document.getElementById("cart-fab"), openPanel);
 addTapListener(document.getElementById("overlay"), closePanel);
 addTapListener(document.querySelector(".panel-close"), closePanel);
-addTapListener(document.querySelector(".clear-btn"), clearList);
 
 // ── CORE FUNCTIONS ────────────────────────────────────────────────────────────
 function toggleCart(foodName, foodCategory, e) {
@@ -902,14 +1033,22 @@ function toggleCart(foodName, foodCategory, e) {
   if (idx === -1) shoppingList.push({ name: foodName, category: foodCategory });
   else { shoppingList.splice(idx, 1); checkedItems.delete(foodName); }
   updateFab();
-  render();
+  saveList();
+  render(); // re-render so button state updates immediately
   if (document.getElementById("list-panel").classList.contains("open")) renderPanel();
 }
 
 function updateFab() {
-  const fab = document.getElementById("cart-fab");
-  document.getElementById("cart-count").textContent = shoppingList.length;
-  shoppingList.length > 0 ? fab.classList.add("visible") : fab.classList.remove("visible");
+  const cartBadge = document.getElementById("cart-count");
+  const plateBadge = document.getElementById("plate-count");
+  if (cartBadge) {
+    cartBadge.textContent = shoppingList.length;
+    shoppingList.length > 0 ? cartBadge.classList.remove('hidden') : cartBadge.classList.add('hidden');
+  }
+  if (plateBadge) {
+    plateBadge.textContent = plateItems.length;
+    plateItems.length > 0 ? plateBadge.classList.remove('hidden') : plateBadge.classList.add('hidden');
+  }
 }
 
 function openPanel() {
@@ -952,6 +1091,9 @@ function renderPanel() {
       const isChecked = checkedItems.has(item.name);
       const div = document.createElement("div");
       div.className = "list-item";
+      div.dataset.name = item.name;
+      div.dataset.cat = item.category;
+      div.style.cursor = "pointer";
       div.innerHTML = `
         <div class="list-item-left">
           <div class="list-check ${isChecked ? 'checked' : ''}" data-name="${item.name}">
@@ -1034,7 +1176,6 @@ function render() {
           <div class="bar-row"><span class="bar-label" style="color:#b47eff">MIC</span><div class="bar-track"><div class="bar-fill" style="width:${food.mic*20}%;background:#b47eff"></div></div></div>
         </div>
         <div class="chevron-col">${isOpen ? "▲" : "▼"}</div>
-        <div class="cart-col"><button class="cart-btn ${inCart ? 'in-list' : ''}">🛒</button></div>
       </div>
       <div class="food-expanded ${isOpen ? 'open' : ''}" style="border-left-color:${c};background:${tierBg[effectiveTier]}">
         <div class="expanded-inner">
@@ -1053,7 +1194,13 @@ function render() {
             ${tierWentUp ? '▲' : '▼'} TIER CHANGES ON ${activeMode.toUpperCase()} — ${tierWentUp ? 'more useful for your goal' : 'less useful for your goal'}
           </div>` : ''}
           ${food.micros.length > 0 ? `<div class="micros-title">KEY MICRONUTRIENTS</div><div class="micros-list">${food.micros.map(m => `<span class="micro-tag">${m}</span>`).join('')}</div>` : ''}
-          <button class="detail-btn" data-food="${food.name}">+ MORE DETAIL</button>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+            <button class="cart-btn ${inCart ? 'in-list' : ''}" data-food="${food.name}" data-cat="${food.category}" style="display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid ${inCart ? '#3ddc84' : 'rgba(255,255,255,0.2)'};color:${inCart ? '#3ddc84' : 'var(--muted)'};font-size:9px;letter-spacing:1.5px;padding:5px 10px;border-radius:3px;cursor:pointer;font-family:'Bebas Neue',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;white-space:nowrap;">
+              🛒 ${inCart ? 'IN SHOP LIST' : 'ADD TO SHOP'}
+            </button>
+            <button class="add-plate-btn" data-food="${food.name}" style="display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid rgba(180,126,255,0.5);color:#b47eff;font-size:9px;letter-spacing:1.5px;padding:5px 10px;border-radius:3px;cursor:pointer;font-family:'Bebas Neue',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;white-space:nowrap;">🍽 ADD TO PLATE</button>
+            <button class="detail-btn" data-food="${food.name}">+ MORE DETAIL</button>
+          </div>
           <div class="detail-panel" id="detail-${food.name.replace(/[^a-z0-9]/gi,'_')}">
             <div style="font-size:8px;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px">FULL MACROS PER 100G</div>
             <div class="macro-grid">
@@ -1074,7 +1221,272 @@ function render() {
   });
 }
 
-// ── LOCALSTORAGE PERSISTENCE ──────────────────────────────────────────────
+// ── PLATE STATE ───────────────────────────────────────────────────────────
+let plateItems = []; // { food, portion: 'S'|'M'|'L' }
+let activePanel = 'shop';
+
+const PORTIONS = { S: 0.8, M: 1.0, L: 1.3 };
+const PORTION_LABELS = { S: 'SMALL', M: 'MEDIUM', L: 'LARGE' };
+const PORTION_GRAMS = { S: '~80G', M: '~150G', L: '~250G' };
+
+function plateGrams(portion) { return { S:80, M:150, L:250 }[portion]; }
+
+function calcPlate() {
+  if (plateItems.length === 0) return null;
+  let totalCalLow = 0, totalCalHigh = 0;
+  let weightedSat = 0, weightedPro = 0, weightedMic = 0, totalWeight = 0;
+
+  plateItems.forEach(({ food, portion }) => {
+    const g = plateGrams(portion);
+    const calContrib = (food.cal * g) / 100;
+    const calLow = (food.cal * g * 0.85) / 100;
+    const calHigh = (food.cal * g * 1.15) / 100;
+    totalCalLow += calLow;
+    totalCalHigh += calHigh;
+    // Weight each food's SAT/PRO/MIC by its calorie contribution
+    // Foods with near-zero calories (cucumber, sparkling water) get minimum weight of 20
+    const w = Math.max(calContrib, 20);
+    weightedSat += food.sat * w;
+    weightedPro += food.pro * w;
+    weightedMic += food.mic * w;
+    totalWeight += w;
+  });
+
+  const sat = Math.round((weightedSat / (totalWeight * 5)) * 100);
+  const pro = Math.round((weightedPro / (totalWeight * 5)) * 100);
+  const mic = Math.round((weightedMic / (totalWeight * 5)) * 100);
+
+  // Meal score — same mode-aware weights as individual food score
+  const w = modeWeights[activeMode];
+  const mealScore = Math.round((sat/100)*w.sat*100 + (pro/100)*w.pro*100 + (mic/100)*w.mic*100);
+
+  return {
+    sat, pro, mic, mealScore,
+    calLow: Math.round(totalCalLow),
+    calHigh: Math.round(totalCalHigh),
+  };
+}
+
+function getPlateFlags(p) {
+  const flags = [];
+  const mode = activeMode;
+
+  // Tier-aware flags — check what's actually on the plate
+  const avoidFoods = plateItems.filter(i => getEffectiveTier(i.food) === 4);
+  const modFoods = plateItems.filter(i => getEffectiveTier(i.food) === 3);
+  if (avoidFoods.length > 0) {
+    flags.push({ type:'warn', text:`⚠ Contains AVOID foods: ${avoidFoods.map(i => i.food.name).join(', ')}` });
+  }
+  if (modFoods.length > plateItems.length / 2) {
+    flags.push({ type:'warn', text:'⚠ Most of this plate is Moderation tier' });
+  }
+
+  // Balance flags
+  if (p.sat >= 60 && p.pro >= 55 && p.mic >= 55) flags.push({ type:'good', text:'✅ Well balanced plate' });
+  if (p.sat < 35) flags.push({ type:'warn', text:'⚠ Low satiety — may not keep you full' });
+  if (p.pro < 30) flags.push({ type:'warn', text:'⚠ Low protein — add a protein source' });
+  if (p.mic < 35) flags.push({ type:'warn', text:'⚠ Weak micronutrients — add vegetables' });
+  if (p.pro >= 65) flags.push({ type:'good', text:'✅ Strong protein coverage' });
+  if (p.mic >= 65) flags.push({ type:'good', text:'✅ Rich micronutrient profile' });
+
+  // Mode-aware calorie flags — fire on ALL modes
+  const calThresholds = { cut: 600, maintain: 900, bulk: 1400 };
+  const calWarnHigh = { cut: 900, maintain: 1300, bulk: 2000 };
+  if (p.calHigh > calWarnHigh[mode]) {
+    flags.push({ type:'warn', text:`⚠ Very high calories for ${mode.toUpperCase()} — consider smaller portions` });
+  } else if (p.calHigh > calThresholds[mode]) {
+    flags.push({ type:'warn', text:`⚠ Calorie dense for ${mode.toUpperCase()} mode` });
+  }
+  if (mode === 'bulk' && p.calHigh < 400) flags.push({ type:'info', text:'💡 Low calories for BULK — consider adding more' });
+
+  return flags;
+}
+
+function renderPlate() {
+  const p = calcPlate();
+  const summary = document.getElementById('plate-summary');
+  const itemsEl = document.getElementById('plate-items');
+  const countLabel = document.getElementById('plate-count-label');
+
+  // Update plate count badge
+  const plateBadge = document.getElementById('plate-count');
+  if (plateItems.length > 0) {
+    plateBadge.textContent = plateItems.length;
+    plateBadge.classList.remove('hidden');
+  } else {
+    plateBadge.classList.add('hidden');
+  }
+
+  countLabel.textContent = plateItems.length > 0 ? `${plateItems.length} ITEM${plateItems.length > 1 ? 'S' : ''} ON PLATE` : '';
+
+  if (!p) {
+    summary.style.display = 'none';
+    itemsEl.innerHTML = '<div class="plate-empty">PLATE IS EMPTY<br><br>SEARCH ABOVE OR TAP<br>+ ADD TO PLATE ON ANY FOOD</div>';
+    return;
+  }
+
+  summary.style.display = 'block';
+
+  // Meal score
+  const scoreColor = p.mealScore >= 70 ? '#3ddc84' : p.mealScore >= 45 ? '#f5c842' : '#ef5350';
+  document.getElementById('plate-cal').innerHTML = `
+    <span style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${scoreColor}">${p.mealScore}</span>
+    <span style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-left:4px">MEAL SCORE</span>
+    <span style="float:right;font-size:11px;color:var(--muted)">~${p.calLow} – ${p.calHigh} kcal</span>
+  `;
+
+  // Bars
+  document.getElementById('plate-sat-bar').style.width = Math.min(p.sat, 100) + '%';
+  document.getElementById('plate-pro-bar').style.width = Math.min(p.pro, 100) + '%';
+  document.getElementById('plate-mic-bar').style.width = Math.min(p.mic, 100) + '%';
+  document.getElementById('plate-sat-pct').textContent = p.sat + '%';
+  document.getElementById('plate-pro-pct').textContent = p.pro + '%';
+  document.getElementById('plate-mic-pct').textContent = p.mic + '%';
+
+  // Flags
+  const flags = getPlateFlags(p);
+  document.getElementById('plate-flags').innerHTML = flags.map(f =>
+    `<div class="plate-flag plate-flag-${f.type}">${f.text}</div>`
+  ).join('');
+
+  // Items
+  itemsEl.innerHTML = '';
+  plateItems.forEach((entry, idx) => {
+    const div = document.createElement('div');
+    div.className = 'plate-item';
+    div.innerHTML = `
+      <div class="plate-item-left">
+        <div class="plate-item-name">${entry.food.name}</div>
+        <div class="plate-item-sub">${PORTION_GRAMS[entry.portion]} · ${entry.food.cal} KCAL/100G</div>
+      </div>
+      <div class="plate-item-right">
+        <button class="portion-btn ${entry.portion === 'S' ? 'active' : ''}" data-idx="${idx}" data-portion="S">S</button>
+        <button class="portion-btn ${entry.portion === 'M' ? 'active' : ''}" data-idx="${idx}" data-portion="M">M</button>
+        <button class="portion-btn ${entry.portion === 'L' ? 'active' : ''}" data-idx="${idx}" data-portion="L">L</button>
+        <button class="plate-remove" data-idx="${idx}">×</button>
+      </div>
+    `;
+    itemsEl.appendChild(div);
+  });
+}
+
+function addToPlate(food, portion) {
+  const existing = plateItems.findIndex(i => i.food.name === food.name);
+  if (existing === -1) plateItems.push({ food, portion: portion || 'M' });
+  else plateItems[existing].portion = portion || plateItems[existing].portion;
+  renderPlate();
+  savePlate();
+}
+
+function savePlate() {
+  try { localStorage.setItem('fg_plate', JSON.stringify(plateItems.map(i => ({ name: i.food.name, portion: i.portion })))); } catch(e) {}
+}
+
+function loadPlate() {
+  try {
+    const saved = localStorage.getItem('fg_plate');
+    if (saved) {
+      const items = JSON.parse(saved);
+      items.forEach(({ name, portion }) => {
+        const food = foods.find(f => f.name === name);
+        if (food) plateItems.push({ food, portion });
+      });
+    }
+  } catch(e) {}
+}
+
+// ── PANEL TAB SWITCHING ───────────────────────────────────────────────────
+function switchPanel(mode) {
+  activePanel = mode;
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.panel-tab[data-panel="${mode}"]`).classList.add('active');
+  const shopContent = document.getElementById('shop-content');
+  const plateContent = document.getElementById('plate-content');
+  const clearBtn = document.getElementById('clear-btn-el');
+  const panelTitle = document.getElementById('panel-title');
+  if (mode === 'shop') {
+    shopContent.classList.remove('hidden');
+    plateContent.classList.remove('active');
+    clearBtn.textContent = 'CLEAR ALL';
+    panelTitle.textContent = '🛒 SHOP';
+    renderPanel();
+  } else {
+    shopContent.classList.add('hidden');
+    plateContent.classList.add('active');
+    clearBtn.textContent = 'CLEAR PLATE';
+    panelTitle.textContent = '🍽 BUILD A PLATE';
+    renderPlate();
+  }
+}
+
+// Panel tab delegation
+addTapListener(document.querySelector('.panel-tabs'), (e) => {
+  const tab = e.target.closest('.panel-tab');
+  if (tab) switchPanel(tab.dataset.panel);
+});
+
+// Plate items delegation — portion change and remove
+addTapListener(document.getElementById('plate-items'), (e) => {
+  const portionBtn = e.target.closest('.portion-btn');
+  if (portionBtn) {
+    const idx = parseInt(portionBtn.dataset.idx);
+    plateItems[idx].portion = portionBtn.dataset.portion;
+    renderPlate(); savePlate(); return;
+  }
+  const removeBtn = e.target.closest('.plate-remove');
+  if (removeBtn) {
+    const idx = parseInt(removeBtn.dataset.idx);
+    plateItems.splice(idx, 1);
+    renderPlate(); savePlate();
+  }
+});
+
+// Plate search
+const plateSearchInput = document.getElementById('plate-search-input');
+const plateSearchResults = document.getElementById('plate-search-results');
+
+plateSearchInput.addEventListener('input', () => {
+  const q = plateSearchInput.value.toLowerCase().trim();
+  if (!q) { plateSearchResults.style.display = 'none'; return; }
+  const results = foods.filter(f => f.name.toLowerCase().includes(q) || f.category.toLowerCase().includes(q)).slice(0, 8);
+  if (results.length === 0) { plateSearchResults.style.display = 'none'; return; }
+  plateSearchResults.innerHTML = results.map(f => `
+    <div class="plate-search-item" data-food="${f.name}">
+      <div>${f.name}</div>
+      <div class="plate-search-item-sub">${f.category.toUpperCase()} · ${tierLabels[f.tier]}</div>
+    </div>
+  `).join('');
+  plateSearchResults.style.display = 'block';
+});
+
+addTapListener(plateSearchResults, (e) => {
+  const item = e.target.closest('.plate-search-item');
+  if (item) {
+    const food = foods.find(f => f.name === item.dataset.food);
+    if (food) { addToPlate(food, 'M'); plateSearchInput.value = ''; plateSearchResults.style.display = 'none'; }
+  }
+});
+
+// Clear button — handles both shop and plate modes (Fix 3)
+addTapListener(document.getElementById('clear-btn-el'), () => {
+  if (activePanel === 'shop') { clearList(); }
+  else { plateItems = []; renderPlate(); savePlate(); }
+});
+
+// ── UPDATE FAB — always visible ───────────────────────────────────────────
+function updateFab() {
+  const fab = document.getElementById("cart-fab");
+  const cartBadge = document.getElementById("cart-count");
+  const plateBadge = document.getElementById("plate-count");
+  cartBadge.textContent = shoppingList.length;
+  shoppingList.length > 0 ? cartBadge.classList.remove('hidden') : cartBadge.classList.add('hidden');
+  plateBadge.textContent = plateItems.length;
+  plateItems.length > 0 ? plateBadge.classList.remove('hidden') : plateBadge.classList.add('hidden');
+  fab.style.display = 'flex'; // always visible
+}
+
+// ── ADD TO PLATE from food card ───────────────────────────────────────────
+// Handled in food list delegation — look for .add-plate-btn
 function saveList() {
   try {
     localStorage.setItem('fg_shopping', JSON.stringify(shoppingList));
@@ -1105,6 +1517,7 @@ clearList = function() {
 document.getElementById("list-items").addEventListener("click", () => { setTimeout(saveList, 50); });
 
 loadList();
+loadPlate();
 updateFab();
 
 // ── WELCOME SCREEN ────────────────────────────────────────────────────────
@@ -1145,10 +1558,10 @@ addTapListener(document.getElementById('welcome-overlay'), (e) => {
 });
 
 // Show welcome on first visit only
-const hasSeenWelcome = localStorage.getItem('fg_welcomed');
+const hasSeenWelcome = localStorage.getItem('fg_welcomed_v62');
 if (!hasSeenWelcome) {
   openWelcome();
-  localStorage.setItem('fg_welcomed', '1');
+  localStorage.setItem('fg_welcomed_v62', '1');
 }
 
 render();
