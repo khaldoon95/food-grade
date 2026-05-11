@@ -7,21 +7,30 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Lago">
 <title>Lago</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poltawski+Nowy:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #ece4d4;
-    --surface: #e4dbc8;
-    --border: #3a3631;
-    --border-light: #d4cabb;
-    --text: #1c1a16;
-    --muted: #6a6258;
-    --dim: #c8bfb0;
-    --t1: #5a7140;
-    --t2: #a87a25;
-    --t3: #a85a36;
-    --t4: #8a3528;
-    --accent: #a85a36;
+    --bg:          #ece4d4;
+    --bg-soft:     #e1d8c4;
+    --surface:     #f5efe1;
+    --surface-2:   #ede5d3;
+    --border:      #2a2823;
+    --border-light: #d0c6af;
+    --text:        #1c1a16;
+    --text-2:      #3a3631;
+    --muted:       #786e5c;
+    --muted-2:     #9a9079;
+    --dim:         #bdb39c;
+    --t1:          #5a7140;
+    --t2:          #a87a25;
+    --t3:          #a85a36;
+    --t4:          #8a3528;
+    --blue:        #4a5870;
+    --purple:      #6e5266;
+    --t1-soft:     rgba(90,113,64,0.08);
+    --t2-soft:     rgba(168,122,37,0.08);
+    --t3-soft:     rgba(168,90,54,0.08);
+    --t4-soft:     rgba(138,53,40,0.08);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   .food-row, .list-check, .cart-btn, .tier-chip, .cat-chip, .sort-btn,
@@ -43,7 +52,7 @@
     -webkit-transform: translate3d(0,0,0);
   }
   .header-top { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 0; }
-  .header-title { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 9vw, 52px); font-weight: 400; letter-spacing: 0; line-height: 1; color: var(--text); }
+  .header-title { font-family: 'Poltawski Nowy', serif; font-size: clamp(32px, 9vw, 52px); font-weight: 400; letter-spacing: 0; line-height: 1; color: var(--text); }
   .header-sub { font-size: 9px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 4px; }
   #food-count { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
 
@@ -52,15 +61,15 @@
   .chip-scroll { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
   .chip-scroll::-webkit-scrollbar { display: none; }
   .tier-chip, .cat-chip {
-    padding: 4px 10px; border-radius: 0; font-size: 9px; letter-spacing: 1px;
+    padding: 4px 10px; border-radius: 6px; font-size: 9px; letter-spacing: 1px;
     font-family: 'DM Sans', sans-serif; cursor: pointer; border: 1px solid var(--border-light);
     background: transparent; color: var(--muted); transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
   }
   .tier-chip.active, .cat-chip.active { color: var(--text); border-color: var(--border); background: rgba(28,26,22,0.05); }
   .controls-row { display: flex; gap: 8px; align-items: center; }
   input[type=text] {
-    flex: 1; background: var(--surface); border: 1px solid var(--border-light);
-    color: var(--text); padding: 7px 12px; border-radius: 0; font-size: 12px;
+    flex: 1; background: var(--bg-soft); border: 1px solid var(--border-light);
+    color: var(--text); padding: 7px 12px; border-radius: 6px; font-size: 12px;
     font-family: 'DM Sans', sans-serif;
   }
   input[type=text]::placeholder { color: var(--muted); }
@@ -92,7 +101,7 @@
   .food-name { font-size: 13px; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .food-meta { display: flex; align-items: center; gap: 5px; margin-top: 2px; }
   .cat-tag { font-size: 8px; background: var(--dim); color: var(--muted); padding: 1px 5px; border-radius: 0; letter-spacing: 1px; white-space: nowrap; }
-  .score-col { text-align: right; font-size: 20px; font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1; }
+  .score-col { text-align: right; font-size: 20px; font-family: 'Lora', serif; font-style: italic; font-weight: 400; line-height: 1; }
   .bars-col { display: flex; flex-direction: column; gap: 4px; padding: 0 0 0 6px; }
   .bar-row { display: flex; align-items: center; gap: 3px; }
   .bar-label { font-size: 7px; color: var(--muted); letter-spacing: 0.5px; width: 16px; flex-shrink: 0; }
@@ -105,13 +114,14 @@
   .food-expanded.open { display: block; }
   .expanded-inner { background: var(--surface); border: 1px solid var(--border-light); padding: 12px 14px; }
   .expand-note { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
-  .expand-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .expand-stat { text-align: center; }
-  .expand-stat-val { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; }
-  .expand-stat-label { font-size: 8px; color: var(--muted); letter-spacing: 1px; margin-top: 1px; }
+  .expand-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-bottom: 12px; border: 1px solid var(--border-light); background: var(--bg-soft); }
+  .expand-stat { text-align: center; padding: 14px 8px; border-right: 1px solid var(--border-light); }
+  .expand-stat:last-child { border-right: none; }
+  .expand-stat-val { font-family: 'Lora', serif; font-style: italic; font-size: 24px; font-weight: 400; line-height: 1; }
+  .expand-stat-label { font-size: 7px; color: var(--muted); letter-spacing: 2px; margin-top: 4px; text-transform: uppercase; }
   .micros-title { font-size: 8px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 6px; }
   .micros-list { display: flex; flex-wrap: wrap; gap: 4px; }
-  .micro-tag { font-size: 9px; background: var(--dim); color: var(--muted); padding: 3px 7px; border-radius: 0; }
+  .micro-tag { font-size: 9px; background: var(--bg-soft); color: var(--muted); padding: 3px 7px; border-radius: 6px; border: 1px solid var(--border-light); }
 
   /* ACTION BUTTONS */
   .food-actions {
@@ -120,16 +130,16 @@
   }
   .btn-action {
     flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 10px 8px; border-radius: 0; border-width: 1px; border-style: solid;
+    padding: 10px 8px; border-radius: 6px; border-width: 1px; border-style: solid;
     font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.5px;
     cursor: pointer; box-sizing: border-box; min-height: 40px;
     touch-action: manipulation; -webkit-user-select: none; user-select: none;
   }
   .btn-shop { border-color: var(--dim); color: var(--muted); background: transparent; }
-  .btn-shop.active { background: rgba(90,113,64,0.08); border-color: var(--t1); color: var(--t1); }
-  .btn-plate { background: rgba(168,90,54,0.06); border-color: var(--accent); color: var(--accent); }
-  .btn-plate.active { background: rgba(168,90,54,0.14); border-color: var(--accent); color: var(--accent); }
-  .btn-detail { background: none; border-color: var(--border-light); color: var(--muted); flex: none; font-size: 10px; padding: 8px 12px; box-sizing: border-box; }
+  .btn-shop.active { background: var(--t1-soft); border-color: var(--t1); color: var(--t1); }
+  .btn-plate { background: var(--t3-soft); border-color: var(--t3); color: var(--t3); }
+  .btn-plate.active { background: rgba(168,90,54,0.14); border-color: var(--t3); color: var(--t3); }
+  .btn-detail { background: none; border-color: var(--border-light); color: var(--muted); flex: none; font-size: 10px; padding: 8px 12px; box-sizing: border-box; border-radius: 6px; }
 
   #empty { text-align: center; padding: 60px 20px; color: var(--dim); font-size: 11px; letter-spacing: 2px; display: none; }
 
@@ -145,7 +155,7 @@
   }
   .mode-label { font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-right: 4px; white-space: nowrap; }
   .mode-btn {
-    padding: 4px 12px; border-radius: 0; font-size: 9px; letter-spacing: 1px;
+    padding: 4px 12px; border-radius: 6px; font-size: 9px; letter-spacing: 1px;
     font-family: 'DM Sans', sans-serif; cursor: pointer;
     border: 1px solid var(--border-light); background: transparent;
     color: var(--muted); transition: all 0.15s; white-space: nowrap;
@@ -171,12 +181,12 @@
     padding: 14px 18px 12px; border-bottom: 1px solid var(--border-light);
     display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
   }
-  .panel-title { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; letter-spacing: 0; color: var(--text); }
+  .panel-title { font-family: 'Poltawski Nowy', serif; font-size: 20px; font-weight: 400; letter-spacing: 0; color: var(--text); }
   .panel-actions { display: flex; gap: 16px; align-items: center; }
   .panel-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px; }
   .clear-btn {
     background: none; border: 1px solid var(--border-light); color: var(--muted);
-    font-size: 9px; letter-spacing: 1px; padding: 4px 10px; border-radius: 0;
+    font-size: 9px; letter-spacing: 1px; padding: 4px 10px; border-radius: 6px;
     font-family: 'DM Sans', sans-serif; cursor: pointer;
   }
   #list-items { overflow-y: auto; flex: 1; padding: 8px 0; -webkit-overflow-scrolling: touch; }
@@ -186,7 +196,7 @@
   }
   .list-item-left { display: flex; align-items: center; gap: 10px; }
   .list-check {
-    width: 18px; height: 18px; border-radius: 0; border: 1px solid var(--muted);
+    width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--muted);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; transition: all 0.15s;
   }
@@ -248,15 +258,15 @@
   .plate-empty { text-align: center; padding: 40px 20px; color: var(--dim); font-size: 12px; letter-spacing: 1px; line-height: 2; }
   .plate-search { padding: 8px 18px; border-bottom: 1px solid var(--border-light); flex-shrink: 0; }
   .plate-search input {
-    width: 100%; background: var(--surface); border: 1px solid var(--border-light);
-    color: var(--text); padding: 7px 12px; border-radius: 0;
+    width: 100%; background: var(--bg-soft); border: 1px solid var(--border-light);
+    color: var(--text); padding: 7px 12px; border-radius: 6px;
     font-size: 13px; font-family: 'DM Sans', sans-serif;
   }
   .plate-search input:focus { outline: none; border-color: var(--border); }
   .plate-search-results {
     position: absolute; left: 18px; right: 18px;
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 0; z-index: 300; max-height: 200px; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; z-index: 300; max-height: 200px; overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
   .plate-search-item {
@@ -282,21 +292,21 @@
     display: inline-flex; align-items: center; justify-content: center;
     font-family: 'DM Sans', sans-serif; font-weight: 700;
   }
-  .fab-badge.plate { background: var(--accent); color: var(--bg); }
+  .fab-badge.plate { background: var(--t3); color: var(--bg); }
   .fab-badge.hidden { display: none; }
 
   /* DETAIL PANEL */
   .detail-panel { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-light); }
   .detail-panel.open { display: block; }
   .macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
-  .macro-stat { text-align: center; padding: 8px 4px; background: rgba(28,26,22,0.03); border-radius: 0; border: 1px solid var(--border-light); }
-  .macro-val { font-family: 'DM Serif Display', serif; font-size: 16px; font-weight: 400; color: var(--text); }
+  .macro-stat { text-align: center; padding: 8px 4px; background: var(--bg-soft); border-radius: 6px; border: 1px solid var(--border-light); }
+  .macro-val { font-family: 'Lora', serif; font-style: italic; font-size: 16px; font-weight: 400; color: var(--text); }
   .macro-label { font-size: 7px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
-  .tier-reason { font-size: 11px; color: var(--muted); line-height: 1.6; padding: 8px 10px; background: rgba(28,26,22,0.03); border-radius: 0; border-left: 3px solid; margin-top: 8px; }
+  .tier-reason { font-size: 11px; color: var(--muted); line-height: 1.6; padding: 8px 10px; background: var(--bg-soft); border-radius: 0; border-left: 3px solid; margin-top: 8px; }
 
   #info-btn {
     background: none; border: 1px solid var(--border-light); color: var(--muted);
-    width: 26px; height: 26px; border-radius: 0; font-size: 12px;
+    width: 26px; height: 26px; border-radius: 50%; font-size: 12px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; transition: all 0.15s;
     touch-action: manipulation; -webkit-user-select: none; user-select: none;
@@ -310,7 +320,7 @@
   }
   #welcome-overlay.hidden { display: none; pointer-events: none; }
   #welcome-panel {
-    background: var(--bg); border-radius: 0;
+    background: var(--bg); border-radius: 16px 16px 0 0;
     width: 100%; max-width: 480px;
     border-top: 2px solid var(--border);
     padding: 28px 24px 40px;
@@ -319,41 +329,41 @@
   .welcome-slides { overflow: hidden; }
   .welcome-slide { display: none; }
   .welcome-slide.active { display: block; }
-  .welcome-slide-title { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 4px; letter-spacing: 0; }
+  .welcome-slide-title { font-family: 'Poltawski Nowy', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 4px; letter-spacing: 0; }
   .welcome-slide-sub { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; }
   .welcome-tier-row {
     display: flex; align-items: flex-start; gap: 12px;
     margin-bottom: 12px; padding: 12px;
-    background: rgba(28,26,22,0.03); border: 1px solid var(--border-light);
+    background: var(--bg-soft); border: 1px solid var(--border-light); border-radius: 8px;
   }
-  .welcome-tier-dot { width: 10px; height: 10px; border-radius: 0; flex-shrink: 0; margin-top: 4px; }
-  .welcome-tier-name { font-family: 'DM Serif Display', serif; font-size: 15px; font-weight: 400; margin-bottom: 2px; }
+  .welcome-tier-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; margin-top: 4px; }
+  .welcome-tier-name { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; margin-bottom: 2px; }
   .welcome-tier-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
   .welcome-axis-row { display: flex; gap: 10px; margin-bottom: 12px; }
   .welcome-axis {
     flex: 1; padding: 12px 10px;
-    background: rgba(28,26,22,0.03); border: 1px solid var(--border-light);
+    background: var(--bg-soft); border: 1px solid var(--border-light); border-radius: 8px;
     text-align: center;
   }
-  .welcome-axis-label { font-family: 'DM Serif Display', serif; font-size: 16px; font-weight: 400; margin-bottom: 4px; }
+  .welcome-axis-label { font-family: 'Poltawski Nowy', serif; font-size: 16px; font-weight: 400; margin-bottom: 4px; }
   .welcome-axis-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
-  .welcome-weight { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 6px; display: block; }
+  .welcome-weight { font-size: 10px; color: var(--muted-2); letter-spacing: 1px; margin-top: 6px; display: block; }
   .welcome-score-note {
     font-size: 12px; color: var(--muted); line-height: 1.6;
-    padding: 12px; background: rgba(28,26,22,0.03);
-    border: 1px solid var(--border-light); margin-bottom: 16px;
+    padding: 12px; background: var(--bg-soft); border: 1px solid var(--border-light);
+    border-radius: 8px; margin-bottom: 16px;
   }
   .welcome-disclaimer {
     font-size: 11px; color: var(--muted); line-height: 1.6;
-    padding: 12px; border: 1px solid var(--border-light); margin-bottom: 16px;
+    padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 16px;
   }
   .welcome-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
   .welcome-dots { display: flex; gap: 6px; }
-  .welcome-dot { width: 6px; height: 6px; border-radius: 0; background: var(--dim); transition: background 0.2s; }
+  .welcome-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); transition: background 0.2s; }
   .welcome-dot.active { background: var(--text); }
   .welcome-btn-row { display: flex; gap: 8px; }
   .welcome-btn {
-    padding: 10px 20px; border-radius: 0; font-size: 11px;
+    padding: 10px 20px; border-radius: 8px; font-size: 11px;
     letter-spacing: 1px; font-family: 'DM Sans', sans-serif;
     cursor: pointer; border: none; transition: all 0.15s;
     touch-action: manipulation; -webkit-user-select: none; user-select: none;
@@ -362,23 +372,89 @@
   .welcome-btn-next { background: var(--text); color: var(--bg); }
   .welcome-btn-done { background: var(--t1); color: var(--bg); }
   .source-tag {
-    display: inline-block; font-size: 9px; background: var(--dim);
-    color: var(--muted); padding: 2px 6px; border-radius: 0;
-    letter-spacing: 1px; margin-top: 4px;
+    display: inline-block; font-size: 9px; background: var(--bg-soft);
+    color: var(--muted); padding: 2px 6px; border-radius: 4px;
+    letter-spacing: 1px; margin-top: 4px; border: 1px solid var(--border-light);
   }
+
+  /* GOAL PICKER — first run */
+  #goal-overlay {
+    position: fixed; inset: 0; background: rgba(28,26,22,0.75);
+    z-index: 600; display: flex; align-items: flex-end; justify-content: center;
+  }
+  #goal-overlay.hidden { display: none; pointer-events: none; }
+  #goal-panel {
+    background: var(--bg); border-radius: 16px 16px 0 0;
+    width: 100%; max-width: 480px;
+    border-top: 2px solid var(--border);
+    padding: 32px 24px 48px;
+  }
+  .goal-title { font-family: 'Poltawski Nowy', serif; font-size: 28px; font-weight: 400; color: var(--text); margin-bottom: 6px; }
+  .goal-sub { font-size: 12px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+  .goal-options { display: flex; flex-direction: column; gap: 10px; }
+  .goal-btn {
+    display: flex; align-items: center; gap: 14px; padding: 16px;
+    border: 1px solid var(--border-light); border-radius: 8px; cursor: pointer;
+    background: var(--bg-soft); transition: all 0.15s;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  }
+  .goal-btn:active { border-color: var(--border); }
+  .goal-btn-icon { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+  .goal-btn-text { flex: 1; }
+  .goal-btn-name { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .goal-btn-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .goal-btn[data-goal="cut"] { border-color: rgba(138,53,40,0.3); }
+  .goal-btn[data-goal="cut"]:active { border-color: var(--t4); background: var(--t4-soft); }
+  .goal-btn[data-goal="maintain"] { border-color: rgba(168,122,37,0.3); }
+  .goal-btn[data-goal="maintain"]:active { border-color: var(--t2); background: var(--t2-soft); }
+  .goal-btn[data-goal="bulk"] { border-color: rgba(90,113,64,0.3); }
+  .goal-btn[data-goal="bulk"]:active { border-color: var(--t1); background: var(--t1-soft); }
+  .goal-skip { text-align: center; margin-top: 16px; font-size: 11px; color: var(--muted-2); cursor: pointer; padding: 8px; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
 <body>
+
+<!-- GOAL PICKER — first run -->
+<div id="goal-overlay" class="hidden">
+  <div id="goal-panel">
+    <div class="goal-title">What's your goal?</div>
+    <div class="goal-sub">Lago adjusts food rankings and scores based on what you're trying to do. You can change this anytime.</div>
+    <div class="goal-options">
+      <div class="goal-btn" data-goal="cut">
+        <div class="goal-btn-icon">✂</div>
+        <div class="goal-btn-text">
+          <div class="goal-btn-name">Lose weight</div>
+          <div class="goal-btn-desc">Foods that fill you up on fewer calories rank higher. Fullness is the priority.</div>
+        </div>
+      </div>
+      <div class="goal-btn" data-goal="maintain">
+        <div class="goal-btn-icon">◎</div>
+        <div class="goal-btn-text">
+          <div class="goal-btn-name">Eat well</div>
+          <div class="goal-btn-desc">Balanced across fullness, protein, and nutrition. Good default for most people.</div>
+        </div>
+      </div>
+      <div class="goal-btn" data-goal="bulk">
+        <div class="goal-btn-icon">▲</div>
+        <div class="goal-btn-text">
+          <div class="goal-btn-name">Build muscle</div>
+          <div class="goal-btn-desc">Calorie-dense, protein-rich foods rank higher. Fullness works against you here.</div>
+        </div>
+      </div>
+    </div>
+    <div class="goal-skip" id="goal-skip">Skip for now</div>
+  </div>
+</div>
 
 <!-- WELCOME SCREEN -->
 <div id="welcome-overlay" class="hidden">
   <div id="welcome-panel">
     <div class="welcome-slides">
 
-      <!-- SLIDE 1: TIERS -->
+      <!-- SLIDE 1 -->
       <div class="welcome-slide active" id="slide-1">
-        <div class="welcome-slide-title">The four tiers</div>
-        <div class="welcome-slide-sub">How Lago classifies food</div>
+        <div class="welcome-slide-title">A food guide, not a tracker</div>
+        <div class="welcome-slide-sub">Open it. Know what to eat. Close it.</div>
         <div class="welcome-tier-row">
           <div class="welcome-tier-dot" style="background:var(--t1)"></div>
           <div>
@@ -390,7 +466,7 @@
           <div class="welcome-tier-dot" style="background:var(--t2)"></div>
           <div>
             <div class="welcome-tier-name" style="color:var(--t2)">Solid</div>
-            <div class="welcome-tier-desc">Good food, worth eating with some awareness. Great nutrition — watch the quantity.</div>
+            <div class="welcome-tier-desc">Good food, worth eating with some awareness. Watch the quantity, not the food.</div>
           </div>
         </div>
         <div class="welcome-tier-row">
@@ -412,7 +488,7 @@
       <!-- SLIDE 2: SCORE -->
       <div class="welcome-slide" id="slide-2">
         <div class="welcome-slide-title">How the score works</div>
-        <div class="welcome-slide-sub">Three axes, one number</div>
+        <div class="welcome-slide-sub">Three things, one number</div>
         <div class="welcome-axis-row">
           <div class="welcome-axis">
             <div class="welcome-axis-label" style="color:var(--t1)">Fullness</div>
@@ -420,18 +496,18 @@
             <span class="welcome-weight">35% of score</span>
           </div>
           <div class="welcome-axis">
-            <div class="welcome-axis-label" style="color:var(--t2)">Protein</div>
+            <div class="welcome-axis-label" style="color:var(--blue)">Protein</div>
             <div class="welcome-axis-desc">Protein content and quality</div>
             <span class="welcome-weight">35% of score</span>
           </div>
           <div class="welcome-axis">
-            <div class="welcome-axis-label" style="color:#6a5aaa">Nourishment</div>
-            <div class="welcome-axis-desc">Vitamins, minerals, micronutrient density</div>
+            <div class="welcome-axis-label" style="color:var(--purple)">Nourishment</div>
+            <div class="welcome-axis-desc">Vitamins, minerals, micronutrients</div>
             <span class="welcome-weight">30% of score</span>
           </div>
         </div>
         <div class="welcome-score-note">
-          The score is built for <strong style="color:var(--text)">eating well without overthinking it</strong> — prioritising foods that fill you up, support muscle, and cover your micronutrients. It is not a universal health score. Calorie-dense foods like olive oil score lower here, not because they're unhealthy, but because they serve a different purpose.
+          Built for <strong style="color:var(--text)">eating well without overthinking it</strong> — foods that fill you up, support muscle, and cover your micronutrients. It's not a universal health score. Olive oil scores lower here, not because it's unhealthy, but because it serves a different purpose.
         </div>
         <div style="font-size:10px;color:var(--muted);letter-spacing:1px">
           Satiety data <span class="source-tag">HOLT ET AL. 1995</span> &nbsp; Micronutrient data <span class="source-tag">USDA / NIH</span>
@@ -440,62 +516,58 @@
 
       <!-- SLIDE 3: MODE SYSTEM -->
       <div class="welcome-slide" id="slide-3">
-        <div class="welcome-slide-title">Your mode</div>
-        <div class="welcome-slide-sub">Same food, different goal, different answer</div>
+        <div class="welcome-slide-title">Same food, different goal</div>
+        <div class="welcome-slide-sub">Your goal changes the rankings</div>
         <div class="welcome-tier-row" style="margin-bottom:10px">
           <div class="welcome-tier-dot" style="background:var(--t4);margin-top:2px"></div>
           <div>
-            <div class="welcome-tier-name" style="color:var(--t4)">✂ Cut</div>
-            <div class="welcome-tier-desc">Fullness matters most. Foods that fill you up on fewer calories rank higher. Fullness 40% / Protein 35% / Nourishment 25%.</div>
+            <div class="welcome-tier-name" style="color:var(--t4)">✂ Lose weight</div>
+            <div class="welcome-tier-desc">Fullness matters most. Foods that fill you up on fewer calories rank higher.</div>
           </div>
         </div>
         <div class="welcome-tier-row" style="margin-bottom:10px">
           <div class="welcome-tier-dot" style="background:var(--t2);margin-top:2px"></div>
           <div>
-            <div class="welcome-tier-name" style="color:var(--t2)">◎ Maintain</div>
-            <div class="welcome-tier-desc">Balanced weights. Default mode. Fullness 35% / Protein 35% / Nourishment 30%.</div>
+            <div class="welcome-tier-name" style="color:var(--t2)">◎ Eat well</div>
+            <div class="welcome-tier-desc">Balanced weights across fullness, protein, and nutrition. Good default for most.</div>
           </div>
         </div>
         <div class="welcome-tier-row" style="margin-bottom:16px">
           <div class="welcome-tier-dot" style="background:var(--t1);margin-top:2px"></div>
           <div>
-            <div class="welcome-tier-name" style="color:var(--t1)">▲ Bulk</div>
-            <div class="welcome-tier-desc">Fullness works against you here. Calorie-dense nutritious foods rank higher. Fullness 20% / Protein 40% / Nourishment 40%.</div>
+            <div class="welcome-tier-name" style="color:var(--t1)">▲ Build muscle</div>
+            <div class="welcome-tier-desc">Calorie-dense, protein-rich foods rank higher. Fullness works against you here.</div>
           </div>
         </div>
         <div class="welcome-score-note">
-          Switching mode <strong style="color:var(--text)">recalculates every score and shifts some tiers.</strong> Salmon goes Essential on Bulk. Boiled potato drops to Solid. Rice goes up. The same food, genuinely different value depending on your goal.
+          Switching goal <strong style="color:var(--text)">recalculates every score and shifts some foods.</strong> Salmon goes Essential on Build muscle. Boiled potato drops on Build muscle. Rice goes up. Same food, different value depending on what you're trying to do.
         </div>
       </div>
 
       <!-- SLIDE 4: WHAT THIS IS -->
       <div class="welcome-slide" id="slide-4">
-        <div class="welcome-slide-title">What this is</div>
-        <div class="welcome-slide-sub">And what it isn't</div>
+        <div class="welcome-slide-title">How to use it</div>
+        <div class="welcome-slide-sub">Simple by design</div>
         <div class="welcome-tier-row" style="margin-bottom:10px">
           <div class="welcome-tier-dot" style="background:var(--t1);margin-top:2px"></div>
-          <div class="welcome-tier-desc">A <strong style="color:var(--text)">reference tool</strong> — open it, know what to eat, close it. No logging.</div>
+          <div class="welcome-tier-desc">Tap any food to see its note and why it ranked where it did.</div>
         </div>
         <div class="welcome-tier-row" style="margin-bottom:10px">
           <div class="welcome-tier-dot" style="background:var(--t1);margin-top:2px"></div>
-          <div class="welcome-tier-desc">Built on <strong style="color:var(--text)">peer-reviewed research</strong> — not opinion, not trends.</div>
+          <div class="welcome-tier-desc">Tap <strong style="color:var(--text)">+ More</strong> for full macros, key micronutrients, and the reasoning behind the score.</div>
         </div>
         <div class="welcome-tier-row" style="margin-bottom:10px">
           <div class="welcome-tier-dot" style="background:var(--t1);margin-top:2px"></div>
-          <div class="welcome-tier-desc">Tap <strong style="color:var(--text)">+ More</strong> on any food to see full macros and why it ranked where it did.</div>
-        </div>
-        <div class="welcome-tier-row" style="margin-bottom:10px">
-          <div class="welcome-tier-dot" style="background:var(--t1);margin-top:2px"></div>
-          <div class="welcome-tier-desc">The <strong style="color:var(--text)">shopping list</strong> saves between sessions — tap 'Add to shop' inside any food card.</div>
+          <div class="welcome-tier-desc"><strong style="color:var(--text)">Add to shop</strong> saves foods to your shopping list — it remembers between sessions.</div>
         </div>
         <div class="welcome-tier-row" style="margin-bottom:16px">
-          <div class="welcome-tier-dot" style="background:var(--accent);margin-top:2px"></div>
-          <div class="welcome-tier-desc"><strong style="color:var(--text)">Build a plate</strong> — add foods, pick portions (S/M/L), and get a meal score weighted by calories. Flags tell you what's missing or overdone.</div>
+          <div class="welcome-tier-dot" style="background:var(--t3);margin-top:2px"></div>
+          <div class="welcome-tier-desc"><strong style="color:var(--text)">Build a plate</strong> — add foods, pick portions (S/M/L), and get a meal score with flags for what's missing or overdone.</div>
         </div>
         <div class="welcome-disclaimer">
-          ⚠️ Directional guidance, not medical advice. Individual needs vary. Consult a professional for specific health conditions.
+          ⚠️ Directional guidance, not medical advice. Individual needs vary.
         </div>
-        <div style="font-size:9px;color:var(--dim);letter-spacing:1.5px;text-align:center">Lago v7 · by Khall00d1</div>
+        <div style="font-size:9px;color:var(--dim);letter-spacing:1.5px;text-align:center">Lago v7.1 · by Khall00d1</div>
       </div>
 
     </div>
@@ -527,7 +599,7 @@
 </div>
 
 <div id="mode-bar">
-  <span class="mode-label">Mode</span>
+  <span class="mode-label">Goal</span>
   <button class="mode-btn" data-mode="cut">✂ Cut</button>
   <button class="mode-btn active" data-mode="maintain">◎ Maintain</button>
   <button class="mode-btn" data-mode="bulk">▲ Bulk</button>
@@ -568,7 +640,7 @@
     <div><span style="color:var(--muted)">Nourishment</span> — micronutrient density per calorie</div>
     <div><span style="color:var(--muted)">Kcal</span> — per 100g raw unless noted</div>
     <div><span style="color:var(--muted)">💰</span> — approximate Sweden price reference</div>
-    <div style="margin-top:14px;color:var(--dim);letter-spacing:2px">Lago v7 · © 2026 Khall00d1</div>
+    <div style="margin-top:14px;color:var(--dim);letter-spacing:2px">Lago v7.1 · © 2026 Khall00d1</div>
   </div>
 </div>
 
@@ -620,13 +692,13 @@
           <span class="plate-bar-pct" id="plate-sat-pct">0%</span>
         </div>
         <div class="plate-bar-row">
-          <span class="plate-bar-label" style="color:var(--t2)">Pro</span>
-          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-pro-bar" style="width:0%;background:var(--t2)"></div></div>
+          <span class="plate-bar-label" style="color:var(--blue)">Pro</span>
+          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-pro-bar" style="width:0%;background:var(--blue)"></div></div>
           <span class="plate-bar-pct" id="plate-pro-pct">0%</span>
         </div>
         <div class="plate-bar-row">
-          <span class="plate-bar-label" style="color:#6a5aaa">Nou</span>
-          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-mic-bar" style="width:0%;background:#6a5aaa"></div></div>
+          <span class="plate-bar-label" style="color:var(--purple)">Nou</span>
+          <div class="plate-bar-track"><div class="plate-bar-fill" id="plate-mic-bar" style="width:0%;background:var(--purple)"></div></div>
           <span class="plate-bar-pct" id="plate-mic-pct">0%</span>
         </div>
       </div>
@@ -981,12 +1053,14 @@ function updateFab() {
 function openPanel() {
   document.getElementById("list-panel").classList.add("open");
   document.getElementById("overlay").classList.add("open");
+  document.body.style.overflow = 'hidden';
   renderPanel();
 }
 
 function closePanel() {
   document.getElementById("list-panel").classList.remove("open");
   document.getElementById("overlay").classList.remove("open");
+  document.body.style.overflow = '';
 }
 
 function clearList() {
@@ -1029,7 +1103,7 @@ function renderPanel() {
           <div class="list-item-name ${isChecked ? 'checked' : ''}">${item.name}</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
-          <button class="shop-to-plate-btn" data-name="${item.name}" title="Add to plate" style="background:none;border:1px solid var(--accent);color:var(--accent);font-size:9px;padding:3px 8px;border-radius:0;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;letter-spacing:1px;">🍽</button>
+          <button class="shop-to-plate-btn" data-name="${item.name}" title="Add to plate" style="background:none;border:1px solid var(--t3);color:var(--t3);font-size:9px;padding:3px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;letter-spacing:1px;">🍽</button>
           <button class="list-remove" data-name="${item.name}" data-cat="${item.category}">×</button>
         </div>
       `;
@@ -1076,7 +1150,7 @@ function render() {
     const maintainTier = food.tier;
     const tierWentUp = effectiveTier < maintainTier;
     const tierWentDown = effectiveTier > maintainTier;
-    const rowBg = idx % 2 === 1 ? "background:#e6ddc8;" : "";
+    const rowBg = idx % 2 === 1 ? "background:var(--surface-2);" : "background:var(--bg);";
 
     const item = document.createElement("div");
     item.className = "food-item";
@@ -1101,8 +1175,8 @@ function render() {
         <div class="score-col" style="color:${c}">${s}</div>
         <div class="bars-col">
           <div class="bar-row"><span class="bar-label" style="color:var(--t1)">Ful</span><div class="bar-track"><div class="bar-fill" style="width:${food.sat*20}%;background:var(--t1)"></div></div></div>
-          <div class="bar-row"><span class="bar-label" style="color:var(--t2)">Pro</span><div class="bar-track"><div class="bar-fill" style="width:${food.pro*20}%;background:var(--t2)"></div></div></div>
-          <div class="bar-row"><span class="bar-label" style="color:#6a5aaa">Nou</span><div class="bar-track"><div class="bar-fill" style="width:${food.mic*20}%;background:#6a5aaa"></div></div></div>
+          <div class="bar-row"><span class="bar-label" style="color:var(--blue)">Pro</span><div class="bar-track"><div class="bar-fill" style="width:${food.pro*20}%;background:var(--blue)"></div></div></div>
+          <div class="bar-row"><span class="bar-label" style="color:var(--purple)">Nou</span><div class="bar-track"><div class="bar-fill" style="width:${food.mic*20}%;background:var(--purple)"></div></div></div>
         </div>
         <div class="chevron-col">${isOpen ? "▲" : "▼"}</div>
       </div>
@@ -1454,11 +1528,33 @@ document.getElementById('welcome-panel').addEventListener('touchend', (e) => {
   }
 });
 
-const hasSeenWelcome = localStorage.getItem('lago_welcomed_v7');
+const hasSeenWelcome = localStorage.getItem('lago_welcomed_v71');
 if (!hasSeenWelcome) {
-  openWelcome();
-  localStorage.setItem('lago_welcomed_v7', '1');
+  // Show goal picker first, then welcome on close
+  document.getElementById('goal-overlay').classList.remove('hidden');
 }
+
+// Goal picker
+addTapListener(document.getElementById('goal-panel'), (e) => {
+  const btn = e.target.closest('.goal-btn');
+  if (btn) {
+    const goal = btn.dataset.goal;
+    activeMode = goal;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.mode-btn[data-mode="${goal}"]`).classList.add('active');
+    rebuildTierChips();
+    render();
+    document.getElementById('goal-overlay').classList.add('hidden');
+    openWelcome();
+    localStorage.setItem('lago_welcomed_v71', '1');
+  }
+});
+
+addTapListener(document.getElementById('goal-skip'), () => {
+  document.getElementById('goal-overlay').classList.add('hidden');
+  openWelcome();
+  localStorage.setItem('lago_welcomed_v71', '1');
+});
 
 render();
 </script>
